@@ -1,6 +1,6 @@
 import os
 from typing import Iterator
-
+import re
 from flask import Flask, request
 from werkzeug.exceptions import BadRequest
 
@@ -24,6 +24,9 @@ def build_query(it: Iterator, cmd: str, value: str) -> Iterator:
         return iter(sorted(res, reverse=reverse))
     if cmd == "limit":
         return get_limit(it, int(value))
+    if cmd == "regex":
+        regex = re.compile(value)
+        return filter(lambda v: regex.findall(v), it)
     return it
 
 
